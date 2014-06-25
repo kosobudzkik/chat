@@ -4,6 +4,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Packet;
+import org.jivesoftware.smackx.muc.MultiUserChat;
+import org.jivesoftware.smackx.muc.RoomInfo;
 import pl.schibsted.chat.AppCommom;
 import pl.schibsted.chat.errorhandling.ChatAppException;
 import pl.schibsted.chat.events.ClientConnectEvent;
@@ -18,15 +21,18 @@ public class ChatClient implements MessageListener {
     public static final String SERVICE = "matcybur.vgnett.no";
     private XMPPConnection _connection;
     private ChatManager _cm;
+    private ChatCredentials _joinedAs;
 
     public void connectAsync(ChatCredentials credentials) {
         ConnectTask ct = new ConnectTask();
         ct.execute(credentials);
+        _joinedAs = credentials;
     }
 
     public void joinArticleChat(String articleId) {
-        if (!_connection.isConnected()) throw new ChatAppException("You are not connected to the server");
-        Chat chat = _cm.getThreadChat("conference");
+        /*if (!_connection.isConnected()) throw new ChatAppException("You are not connected to the server");
+        Chat chat = _cm.createChat(articleId, this);
+        Chat chafdsat = _cm.getThreadChat("conference");
         Chat chat1 = _cm.getThreadChat(articleId);
         Chat chat2 = _cm.getThreadChat(articleId+ "@conference");
         Chat chat3 = _cm.getThreadChat(articleId+ "@conference." + HOST);
@@ -37,13 +43,18 @@ public class ChatClient implements MessageListener {
                 Log.d("ZZZ","\t" + entry.getName() + "\t" + entry.getUser());
             }
         }
-        chat.addMessageListener(this);
+        chat.addMessageListener(this);*/
     }
 
     public void sendMessage(String articleId, String message) {
-        Chat chat = _cm.getThreadChat(articleId);
-        if (chat == null) throw new ChatAppException("No chat room with ID "+ articleId);
+        //Chat chat = _cm.createChat(articleId, this);
+        MultiUserChat chat = new MultiUserChat(_connection, articleId + "@conference." + HOST);
         try {
+
+            //RoomInfo info = MultiUserChat.getRoomInfo(_connection, articleId + "@conference. " + HOST);
+
+
+            chat.join(_joinedAs.Username);
             chat.sendMessage(message);
         } catch (XMPPException e) {
             throw new ChatAppException(e);
@@ -78,6 +89,7 @@ public class ChatClient implements MessageListener {
                 String s= connection.getServiceName();
                 connection.login(chatCredentials[0].Username, chatCredentials[0].Password);
                 _cm = _connection.getChatManager();
+
                 res = new ClientConnectEvent();
             } catch (Exception ex) {
                 res = new ClientConnectEvent(ex);

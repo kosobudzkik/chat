@@ -22,7 +22,8 @@ import pl.schibsted.chat.xmpp.ChatCredentials;
  */
 public class ArticleChatActivity extends Activity {
     ChatClient _chatClient;
-    private String _currentRoom = "23239282";
+   // private String _currentRoom = "111";
+     private String _currentRoom = "23239282";
 
     /**
      * Called when the activity is first created.
@@ -83,9 +84,9 @@ public class ArticleChatActivity extends Activity {
 
     private void sendChatMessage(TextView textView) {
         try {
-            _chatClient.joinArticleChat(_currentRoom);
             String text = textView.getText().toString();
             if(text.length() > 0) {
+                _chatClient.joinArticleChat(_currentRoom);
                 _chatClient.sendMessage(_currentRoom, text);
                 textView.setText("");
             }
