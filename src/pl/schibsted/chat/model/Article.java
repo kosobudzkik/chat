@@ -1,5 +1,7 @@
 package pl.schibsted.chat.model;
 
+import pl.schibsted.chat.model.api.Image;
+
 /**
  * @author krzysztof.kosobudzki
  */
@@ -7,7 +9,8 @@ public class Article {
     private long id;
     private String title;
     private String body;
-    private int published;
+    private long published;
+    private Image mainImages;
 
     public Article() {
 
@@ -37,11 +40,19 @@ public class Article {
         this.body = body;
     }
 
-    public int getPublished() {
+    public long getPublished() {
         return published;
     }
 
-    public void setPublished(int published) {
+    public void setPublished(long published) {
         this.published = published;
+    }
+
+    public Image getMainImages() {
+        return mainImages;
+    }
+
+    public void setMainImages(Image mainImages) {
+        this.mainImages = mainImages;
     }
 }

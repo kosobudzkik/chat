@@ -7,11 +7,21 @@ import android.app.LoaderManager;
 import android.content.Loader;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.widget.ViewFlipper;
+import android.widget.Toast;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 import pl.schibsted.chat.AppConfig;
 import pl.schibsted.chat.R;
+import pl.schibsted.chat.fragments.ArticleFragment;
 import pl.schibsted.chat.fragments.ArticlesFragment;
+import pl.schibsted.chat.listeners.OnArticlesListener;
+import pl.schibsted.chat.model.Article;
 import pl.schibsted.chat.model.MyProfile;
+import pl.schibsted.chat.model.api.HalArticleList;
+import pl.schibsted.chat.model.requests.FetchArticleRequest;
+import pl.schibsted.chat.model.requests.FetchArticlesRequest;
+import pl.schibsted.chat.service.RetrofitSpiceService;
 import pl.schibsted.chat.utils.SimpleLog;
 
 import java.io.IOException;
@@ -19,9 +29,8 @@ import java.io.IOException;
 /**
  * @author krzysztof.kosobudzki
  */
-public class MainActivity extends Activity implements LoaderManager.LoaderCallbacks<MyProfile> {
-    private static final String LIST_FRAGMENT_TAG = "LIST_FRAGMENT_TAG";
-    private static final String DETAILS_FRAGMENT_TAG = "DETAILS_FRAGMENT_TAG";
+public class MainActivity extends Activity implements LoaderManager.LoaderCallbacks<MyProfile>, OnArticlesListener {
+    private static final String CONTENT_FRAGMENT_TAG = "CONTENT_FRAGMENT_TAG";
 
     private AccountManager mAccountManager;
 
@@ -30,7 +39,7 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
 
     private boolean isAddingAccount;
 
-    private ViewFlipper mViewFilpper;
+    private final SpiceManager mSpiceManager = new SpiceManager(RetrofitSpiceService.class);
 
     /**
      * Called when the activity is first created.
@@ -63,28 +72,40 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
         }
     }
 
-    private void initView() {
-        mViewFilpper = (ViewFlipper) findViewById(R.id.view_flipper);
+    @Override
+    protected void onStart() {
+        mSpiceManager.start(this);
 
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        mSpiceManager.shouldStop();
+
+        super.onStop();
+    }
+
+    private void initView() {
         swapFragment(ArticlesFragment.class, null);
     }
 
-    private void swapFragment(Class<? extends Fragment> clazz, Bundle arguments) {
-        Fragment f = getFragmentManager().findFragmentByTag(LIST_FRAGMENT_TAG);
+    private void swapFragment(Class<? extends Fragment> listClass, Bundle arguments) {
+        Fragment f = getFragmentManager().findFragmentByTag(CONTENT_FRAGMENT_TAG);
 
-        if (f != null && clazz.equals(((Object) f).getClass())) {
+        if (f != null && listClass.equals(((Object) f).getClass())) {
             // there is no need to swap the same fragments
             return;
         }
 
         try {
-            Fragment fragment = clazz.newInstance();
+            Fragment fragment = listClass.newInstance();
             fragment.setArguments(arguments);
 
             getFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.list_container, fragment, LIST_FRAGMENT_TAG)
-//                    .addToBackStack(null)
+                    .replace(R.id.content_container, fragment, CONTENT_FRAGMENT_TAG)
+                    .addToBackStack(null)
                     .commit();
         } catch (InstantiationException e) {
             e.printStackTrace();
@@ -202,6 +223,39 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
                 e.printStackTrace();
             }
 
+        }
+    };
+
+    @Override
+    public void onArticleSelected(long articleId) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(ArticleFragment.ID_KEY, articleId);
+
+        swapFragment(ArticleFragment.class, bundle);
+    }
+
+    @Override
+    public void onArticleLoadSelected(long articleId, RequestListener<Article> articleRequestListener) {
+        mSpiceManager.execute(new FetchArticleRequest(articleId), articleRequestListener);
+    }
+
+    @Override
+    public void onArticlesShouldLoad(int offset, int limit, RequestListener<HalArticleList> articleListRequestListener) {
+        mSpiceManager.execute(new FetchArticlesRequest(limit, offset), articleListRequestListener);
+    }
+
+    private final RequestListener<Article> mArticleRequestListener = new RequestListener<Article>() {
+        @Override
+        public void onRequestFailure(SpiceException e) {
+            Toast.makeText(getApplicationContext(), R.string.toast_unknown_error, Toast.LENGTH_SHORT).show();
+
+            e.printStackTrace();
+        }
+
+        @Override
+        public void onRequestSuccess(Article article) {
+            Bundle bundle = new Bundle();
+//            bundle.putString();
         }
     };
 }

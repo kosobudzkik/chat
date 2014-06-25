@@ -2,17 +2,20 @@ package pl.schibsted.chat;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.SparseArray;
-import pl.schibsted.chat.utils.AssetsUtils;
 import com.schibsted.android.sdk.SPiDClient;
 import com.schibsted.android.sdk.configuration.SPiDConfiguration;
 import com.schibsted.android.sdk.configuration.SPiDConfigurationBuilder;
+import pl.schibsted.chat.utils.AssetsUtils;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author krzysztof.kosobudzki
@@ -20,6 +23,8 @@ import java.io.IOException;
 public class App extends Application {
     private static final int ASSETS_IMAGE_E = 123;
     private static final int ASSETS_IMAGE_B = 243;
+
+    private final Map<String, Bitmap> SIMPLE_CASH = new HashMap<String, Bitmap>();
 
     public static final SparseArray<String> FONTS = new SparseArray<String>();
 
@@ -43,6 +48,14 @@ public class App extends Application {
         configureSPiD();
         configureStrictMode();
         /*configureParseDotCom();*/
+    }
+
+    public Bitmap getImage(String url) {
+        return SIMPLE_CASH.get(url);
+    }
+
+    public void putImage(String url, Bitmap bitmap) {
+        SIMPLE_CASH.put(url, bitmap);
     }
 
     public Typeface getTypeface(int style) {

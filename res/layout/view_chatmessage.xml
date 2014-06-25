@@ -7,7 +7,7 @@
 
     <view android:layout_width="fill_parent"
           android:layout_height="wrap_content"
-          
+
           class="pl.schibsted.chat.components.LatoTextView" android:id="@+id/chat_name"/>
     <view android:layout_width="fill_parent"
           android:layout_height="wrap_content"

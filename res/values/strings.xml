@@ -4,6 +4,10 @@
 
     <string name="todo">TODO</string>
 
+    <!-- REST configuration -->
+    <string name="rest_server_url">http://matcybur.vgnett.no/hd4</string>
+    <!-- End of REST configuration -->
+
     <!-- Auth -->
     <string name="authenticator_account_type">pl.schibsted.chat.authenticator</string>
     <string name="authenticator_token_type">pl.schibsted.chat.tokentype</string>
