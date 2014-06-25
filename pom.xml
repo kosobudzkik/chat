@@ -9,6 +9,13 @@
     <version>0.0.1</version>
     <name>Chat</name>
 
+    <properties>
+        <robospice.version>1.4.11</robospice.version>
+        <robospice-google-http-client.version>1.4.11</robospice-google-http-client.version>
+        <google-http-client.gson.version>1.17.0-rc</google-http-client.gson.version>
+        <robospice-retrofit.version>1.4.11</robospice-retrofit.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.schibsted.android</groupId>
@@ -22,31 +29,7 @@
             <scope>provided</scope>
         </dependency>
 
-
-        <!--<dependency>-->
-            <!--<groupId>android</groupId>-->
-            <!--<artifactId>android</artifactId>-->
-            <!--<version>4.1.2_r4</version>-->
-            <!--<scope>provided</scope>-->
-        <!--</dependency>-->
-        <!--<dependency>
-            <groupId>android.support</groupId>
-            <artifactId>compatibility-v4</artifactId>
-            <version>19.0.1</version>
-        </dependency>
         <dependency>
-            <groupId>android.support</groupId>
-            <artifactId>compatibility-v7-appcompat</artifactId>
-            <version>19.0.1</version>
-            <type>apklib</type>
-        </dependency>
-        <dependency>
-            <groupId>android.support</groupId>
-            <artifactId>compatibility-v7-appcompat</artifactId>
-            <version>19.0.1</version>
-            <type>jar</type>
-        </dependency>-->
-        <!--<dependency>
             <groupId>com.google.http-client</groupId>
             <artifactId>google-http-client-gson</artifactId>
             <version>${google-http-client.gson.version}</version>
@@ -80,7 +63,7 @@
             <groupId>com.octo.android.robospice</groupId>
             <artifactId>robospice-retrofit</artifactId>
             <version>${robospice-retrofit.version}</version>
-        </dependency>-->
+        </dependency>
     </dependencies>
     <build>
         <!--finalName>${project.artifactId}</finalName-->
