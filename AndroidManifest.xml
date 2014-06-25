@@ -28,6 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+<<<<<<< HEAD
 
         <activity
                 android:name=".activities.LoginActivity"
@@ -47,5 +48,8 @@
 
             <meta-data android:name="android.accounts.AccountAuthenticator" android:resource="@xml/authenticator"/>
         </service>
+=======
+        <activity android:name=".activities.ArticleChatActivity"/>
+>>>>>>> 919820602def9bd37c1f90627185a8d70244e195
     </application>
 </manifest>
