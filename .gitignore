@@ -28,3 +28,6 @@ proguard/
 # User-specific IDEA files
 .idea/workspace.xml
 .idea/vcs.xml
+
+# Hackday hack
+pom.xml
