@@ -22,4 +22,8 @@
     <string name="login_password">Password</string>
     <string name="login_login">Log in</string>
     <string name="login_register">Register new profile on web page</string>
+
+    <!-- ArticlesFragment -->
+    <string name="info_no_results">No results was found</string>
+    <string name="article_date">Published: *%s*</string>
 </resources>
