@@ -9,7 +9,7 @@ import pl.schibsted.chat.events.ClientConnectEvent;
 public class ChatClient {
     public static final String HOST = "matcyburtest.int.vgnett.no";
     public static final int PORT = 5222;
-    public static final String SERVICE = "gmail.com";
+    public static final String SERVICE = "matcyburtest.int.vgnett.no";
     private XMPPConnection _connection;
 
     public void connectAsync(ChatCredentials credentials) {
@@ -28,6 +28,9 @@ public class ChatClient {
             try {
                 //Connect to the server
                 connection.connect();
+                for (int i = 0; i < 10000 && !connection.isConnected(); i += 100) {
+                    Thread.sleep(100);
+                }
                 connection.login(chatCredentials[0].Username, chatCredentials[0].Password);
                 res = new ClientConnectEvent();
             } catch (Exception ex) {

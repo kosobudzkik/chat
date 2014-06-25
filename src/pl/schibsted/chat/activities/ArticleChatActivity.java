@@ -25,6 +25,6 @@ public class ArticleChatActivity extends Activity {
     protected void onResume() {
         super.onResume();
         ChatClient ct = new ChatClient();
-        ct.connectAsync(null);
+        ct.connectAsync(new ChatCredentials("fronilse", "test"));
     }
 }
