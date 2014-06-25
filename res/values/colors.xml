@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="main_orange">#F7BE29</color>
+    <color name="main_green">#3DC863</color>
+    <color name="negative">#FF3F7A</color>
+    <color name="additional_purple">#8C2D8C</color>
+    <color name="background">#E0E0E0</color>
+    <color name="background_box">#FFFFFF</color>
+    <color name="background_gray_light">#C4C4C4</color>
+    <color name="background_gray_lightest">#E0E0E0</color>
+
+    <color name="chart_orange_medium">#F7BE29</color>
+    <color name="chart_orange_strong">#fff77632</color>
+    <color name="chart_orange_light">#fff7ce8f</color>
+
+    <color name="font_main">#707070</color>
+    <color name="font_main_light">#8C8C8C</color>
+    <color name="font_white">#FFFFFF</color>
+</resources>

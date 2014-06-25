@@ -1,7 +1,5 @@
 package pl.schibsted.chat.events;
 
-import com.sun.deploy.util.SessionState;
-
 /**
  * When the chat client connects to server
  */

@@ -2,7 +2,24 @@
 <resources>
     <string name="app_name">chat</string>
 
+    <string name="todo">TODO</string>
+
     <!-- Auth -->
     <string name="authenticator_account_type">pl.schibsted.chat.authenticator</string>
     <string name="authenticator_token_type">pl.schibsted.chat.tokentype</string>
+
+    <!-- SPiD configuration -->
+    <string name="spid_config_app_url_scheme">spid-52df97c5efd04bf613000002</string>
+    <string name="spid_config_server_url">https://stage.payment.schibsted.no</string>
+
+    <!-- Toasts -->
+    <string name="toast_both_email_and_password">Both Email and Password are required</string>
+    <string name="toast_no_access_to_that_product">User is not registered in vektklubb.no</string>
+    <string name="toast_unknown_error">Unknown error. Try again later.</string>
+
+    <!-- Activity login -->
+    <string name="login_email">E-mail</string>
+    <string name="login_password">Password</string>
+    <string name="login_login">Log in</string>
+    <string name="login_register">Register new profile on web page</string>
 </resources>
