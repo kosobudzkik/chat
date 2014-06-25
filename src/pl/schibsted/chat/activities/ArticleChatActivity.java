@@ -12,6 +12,8 @@ import pl.schibsted.chat.AppCommom;
 import pl.schibsted.chat.R;
 import pl.schibsted.chat.adapter.ChatMessageAdapter;
 import pl.schibsted.chat.events.ClientConnectEvent;
+import pl.schibsted.chat.events.IncomingChatMessageEvent;
+import pl.schibsted.chat.model.ChatMessage;
 import pl.schibsted.chat.utils.DialogFactory;
 import pl.schibsted.chat.utils.SimpleLog;
 import pl.schibsted.chat.xmpp.ChatClient;
@@ -41,6 +43,12 @@ public class ArticleChatActivity extends Activity {
             }
         });
 
+        Intent inent = getIntent();
+        String artId = inent.getStringExtra("ArticleId");
+        if (artId != null) {
+            _currentRoom = artId;
+            Log.d("", "Intent received - artcleId: " + artId);
+        }
         ((ChatView) findViewById(R.id.chatView)).initAdapter();
     }
 
@@ -54,6 +62,7 @@ public class ArticleChatActivity extends Activity {
     public void onConnected(ClientConnectEvent e) {
         if (e.Success) {
             ((ChatView) findViewById(R.id.chatView)).setReady(true);
+            _chatClient.joinArticleChatAsync(_currentRoom);
         }
         else {
             new DialogFactory().showOkMessage(this, "Error with chat service: " + e.Error.getMessage());
@@ -65,13 +74,10 @@ public class ArticleChatActivity extends Activity {
     protected void onResume() {
         super.onResume();
         AppCommom.EventBus.register(this);
-        _chatClient = new ChatClient();
-        _chatClient.connectAsync(new ChatCredentials("test1", "test"));
-        debug();
-    }
-
-    private void debug() {
-
+        if (_chatClient == null) {
+            _chatClient = new ChatClient();
+            _chatClient.connectAsync(this, new ChatCredentials("test1", "test"));
+        }
     }
 
     @Override
@@ -86,9 +92,13 @@ public class ArticleChatActivity extends Activity {
         try {
             String text = textView.getText().toString();
             if(text.length() > 0) {
-                _chatClient.joinArticleChat(_currentRoom);
-                _chatClient.sendMessage(_currentRoom, text);
+                _chatClient.sendMessage(text);
                 textView.setText("");
+
+                ChatMessage msg = new ChatMessage();
+                msg.From = "me";
+                msg.Message = text;
+                AppCommom.EventBus.post(new IncomingChatMessageEvent(msg));
             }
         } catch(Exception e){
             new DialogFactory().showOkMessage(this, "Error when sending msg: " + e.getMessage());

@@ -17,6 +17,7 @@ import pl.schibsted.chat.events.IncomingChatMessageEvent;
 import pl.schibsted.chat.model.ChatMessage;
 
 public class ChatView extends LinearLayout {
+    private ChatMessageAdapter _adapter;
     public ChatView(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -35,11 +36,12 @@ public class ChatView extends LinearLayout {
         }
     }
 
+
     public void initAdapter() {
         Context context = getContext();
-        ChatMessageAdapter adapter = new ChatMessageAdapter(context);
+        _adapter = new ChatMessageAdapter(context);
 
-        ((ListView) findViewById(R.id.chatview_messagelist)).setAdapter(adapter);
+        ((ListView) findViewById(R.id.chatview_messagelist)).setAdapter(_adapter);
 
         ChatMessage m1 = new ChatMessage();
         m1.From = "Jim";

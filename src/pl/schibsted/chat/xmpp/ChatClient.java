@@ -1,10 +1,13 @@
 package pl.schibsted.chat.xmpp;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
+import org.jivesoftware.smackx.muc.DiscussionHistory;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.RoomInfo;
 import pl.schibsted.chat.AppCommom;
@@ -13,6 +16,7 @@ import pl.schibsted.chat.events.ClientConnectEvent;
 import pl.schibsted.chat.events.IncomingChatMessageEvent;
 import pl.schibsted.chat.model.ChatMessage;
 
+import java.util.Collection;
 import java.util.Date;
 
 public class ChatClient implements MessageListener {
@@ -22,40 +26,62 @@ public class ChatClient implements MessageListener {
     private XMPPConnection _connection;
     private ChatManager _cm;
     private ChatCredentials _joinedAs;
+    private MultiUserChat _chat;
+    private Context context;
+    private Activity _activity;
 
-    public void connectAsync(ChatCredentials credentials) {
+    public void connectAsync(Activity activity, ChatCredentials credentials) {
+        _activity = activity;
         ConnectTask ct = new ConnectTask();
         ct.execute(credentials);
         _joinedAs = credentials;
+
+
+    }
+    public void joinArticleChatAsync(String currentRoom) {
+        new AsyncJoinTask().doInBackground(currentRoom);
+    }
+
+    class AsyncJoinTask extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            joinArticleChat(strings[0]);
+            return null;
+        }
     }
 
     public void joinArticleChat(String articleId) {
-        /*if (!_connection.isConnected()) throw new ChatAppException("You are not connected to the server");
-        Chat chat = _cm.createChat(articleId, this);
-        Chat chafdsat = _cm.getThreadChat("conference");
-        Chat chat1 = _cm.getThreadChat(articleId);
-        Chat chat2 = _cm.getThreadChat(articleId+ "@conference");
-        Chat chat3 = _cm.getThreadChat(articleId+ "@conference." + HOST);
-        Chat chat43 = _cm.getThreadChat("conference");
-        for (RosterGroup group : _connection.getRoster().getGroups()) {
-            Log.d("ZZZ", group.getName());
-            for (RosterEntry entry : group.getEntries()) {
-                Log.d("ZZZ","\t" + entry.getName() + "\t" + entry.getUser());
-            }
-        }
-        chat.addMessageListener(this);*/
-    }
-
-    public void sendMessage(String articleId, String message) {
-        //Chat chat = _cm.createChat(articleId, this);
-        MultiUserChat chat = new MultiUserChat(_connection, articleId + "@conference." + HOST);
+        _chat = new MultiUserChat(_connection, articleId + "@conference." + HOST);
         try {
-
             //RoomInfo info = MultiUserChat.getRoomInfo(_connection, articleId + "@conference. " + HOST);
 
+            // the amount of history to receive. In this example we are requesting the last 5 messages.
+            DiscussionHistory history = new DiscussionHistory();
+            history.setMaxStanzas(10);
+            _chat.join(_joinedAs.Username, "", history, SmackConfiguration.getPacketReplyTimeout());
+           _chat.addMessageListener(new PacketListener() {
+               @Override
+               public void processPacket(final Packet packet) {
+                   if (packet instanceof Message) {
+                       _activity.runOnUiThread(new Runnable() {
+                           @Override
+                           public void run() {
+                               processMessage((Message) packet);
 
-            chat.join(_joinedAs.Username);
-            chat.sendMessage(message);
+                           }
+                       });
+                   }
+               }
+           });
+        } catch (Exception e) {
+            throw new ChatAppException(e);
+        }
+    }
+
+    public void sendMessage(String message) {
+        try {
+            _chat.sendMessage(message);
         } catch (XMPPException e) {
             throw new ChatAppException(e);
         }
@@ -70,6 +96,16 @@ public class ChatClient implements MessageListener {
         IncomingChatMessageEvent event = new IncomingChatMessageEvent(msg);
         AppCommom.EventBus.post(event);
     }
+
+    public void processMessage(Message message) {
+        ChatMessage msg = new ChatMessage();
+        msg.Message = message.getBody();
+        msg.From = message.getFrom();
+        msg.ThreadName = "";
+        IncomingChatMessageEvent event = new IncomingChatMessageEvent(msg);
+        AppCommom.EventBus.post(event);
+    }
+
 
     public class ConnectTask extends AsyncTask<ChatCredentials, Void, ClientConnectEvent> {
 

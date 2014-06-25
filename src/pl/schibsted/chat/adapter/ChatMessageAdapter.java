@@ -31,6 +31,7 @@ public class ChatMessageAdapter extends BaseAdapter {
     @Subscribe
     public void onMessageReceived(IncomingChatMessageEvent e) {
         _messages.add(e.ChatMessage);
+        notifyDataSetChanged();
     }
 
     @Override
