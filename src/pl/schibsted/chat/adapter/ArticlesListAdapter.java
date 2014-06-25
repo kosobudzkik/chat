@@ -1,12 +1,14 @@
 package pl.schibsted.chat.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.text.style.TextAppearanceSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import pl.schibsted.chat.App;
 import pl.schibsted.chat.R;
 import pl.schibsted.chat.async.DownloadAsyncTask;
 import pl.schibsted.chat.components.LatoTextView;
@@ -90,7 +92,15 @@ public class ArticlesListAdapter extends BaseAdapter {
                 ));
 
         if (article.getMainImages() != null) {
-            new DownloadAsyncTask(vh.coverView).execute(article.getMainImages().getNormalUrl());
+            Bitmap bmp = App.getInstance().getImage(article.getMainImages().getNormalUrl());
+
+            if (bmp == null) {
+                vh.coverView.setTag(article.getMainImages().getNormalUrl());
+
+                new DownloadAsyncTask(vh.coverView).execute();
+            } else {
+                vh.coverView.setImageBitmap(bmp);
+            }
         }
 
         return v;

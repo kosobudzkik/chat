@@ -2,6 +2,7 @@ package pl.schibsted.chat.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import pl.schibsted.chat.R;
+import pl.schibsted.chat.activities.ArticleChatActivity;
 import pl.schibsted.chat.async.DownloadAsyncTask;
 import pl.schibsted.chat.components.LatoTextView;
 import pl.schibsted.chat.listeners.OnArticlesListener;
@@ -46,6 +48,14 @@ public class ArticleFragment extends Fragment {
         mImageView = (ImageView) v.findViewById(R.id.single_article_image_view);
         mWebView = (WebView) v.findViewById(R.id.single_article_web_view);
 
+        mTitleTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = ArticleChatActivity.createIntent(getActivity(), String.valueOf(getArguments().getLong(ID_KEY)));
+                getActivity().startActivity(i);
+            }
+        });
+
         return v;
     }
 
@@ -69,7 +79,7 @@ public class ArticleFragment extends Fragment {
         @Override
         public void onRequestSuccess(Article article) {
             mTitleTextView.setText(article.getTitle());
-            mWebView.loadData(article.getBody(), "text/html", "utf-8");
+            mWebView.loadDataWithBaseURL(null, article.getBody(), "text/html", "UTF-8", null);
 
 //            SimpleLog.d(article.getMainImages().getNormalUrl());
 
@@ -77,17 +87,10 @@ public class ArticleFragment extends Fragment {
             mImageView.setVisibility(View.VISIBLE);
 
             if (article.getMainImages().getNormalUrl() != null) {
-                new DownloadAsyncTask(mImageView).execute(article.getMainImages().getNormalUrl());
+                mImageView.setTag(article.getMainImages().getNormalUrl());
+
+                new DownloadAsyncTask(mImageView).execute();
             }
-//            mProgressBar.animate()
-//                    .alpha(0.0f)
-//                    .setDuration(500)
-//                    .start();
-//
-//            mLayout.animate()
-//                    .alpha(1.0f)
-//                    .setDuration(700)
-//                    .start();
         }
     };
 }

@@ -19,6 +19,7 @@ public class Image {
     }
 
     public String getNormalUrl() {
-        return String.format(url, "fullsize");
+        return String.format(url, "100");
+//        return String.format(url, "fullsize");
     }
 }

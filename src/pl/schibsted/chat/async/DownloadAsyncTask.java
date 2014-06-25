@@ -30,13 +30,13 @@ public class DownloadAsyncTask extends AsyncTask<String, Void, Bitmap> {
     @Override
     protected Bitmap doInBackground(String... params) {
         // params comes from the execute() call: params[0] is the url.
-        mUrl = params[0];
+        mUrl = mImageView.getTag().toString();
 
         if (App.getInstance().getImage(mUrl) != null) {
             return App.getInstance().getImage(mUrl);
         }
 
-        return downloadBitmap(params[0]);
+        return downloadBitmap(mUrl);
     }
 
     @Override
