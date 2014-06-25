@@ -19,16 +19,12 @@ public class ArticleChatActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_article_chat);
-
-
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        ChatClient.ConnectTask ct = new ChatClient.ConnectTask();
-        ct.execute(new ChatCredentials());
-
+        ChatClient ct = new ChatClient();
+        ct.connectAsync(null);
     }
 }
