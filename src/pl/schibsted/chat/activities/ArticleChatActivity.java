@@ -1,6 +1,8 @@
 package pl.schibsted.chat.activities;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -41,6 +43,12 @@ public class ArticleChatActivity extends Activity {
         ((ChatView) findViewById(R.id.chatView)).initAdapter();
     }
 
+    public static Intent createIntent(android.content.Context context, String articleId) {
+        Intent i = new Intent(context, ArticleChatActivity.class);
+        i.putExtra("ArticleId", articleId);
+        return i;
+    }
+
     @Subscribe
     public void onConnected(ClientConnectEvent e) {
         if (e.Success) {
@@ -57,7 +65,7 @@ public class ArticleChatActivity extends Activity {
         super.onResume();
         AppCommom.EventBus.register(this);
         _chatClient = new ChatClient();
-        _chatClient.connectAsync(new ChatCredentials("fronilse@matcyburtest.int.vgnett.no", "test"));
+        _chatClient.connectAsync(new ChatCredentials("test1", "test"));
         debug();
     }
 
@@ -74,11 +82,16 @@ public class ArticleChatActivity extends Activity {
     }
 
     private void sendChatMessage(TextView textView) {
-        String text = textView.getText().toString();
-        if(text.length() > 0) {
-            _chatClient.sendMessage(_currentRoom, text);
-            textView.setText("");
-        }
+        try {
+            _chatClient.joinArticleChat(_currentRoom);
+            String text = textView.getText().toString();
+            if(text.length() > 0) {
+                _chatClient.sendMessage(_currentRoom, text);
+                textView.setText("");
+            }
+        } catch(Exception e){
+            new DialogFactory().showOkMessage(this, "Error when sending msg: " + e.getMessage());
+            Log.e("", e.getMessage(), e);}
     }
 
 }
