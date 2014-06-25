@@ -72,7 +72,7 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
     private void swapFragment(Class<? extends Fragment> clazz, Bundle arguments) {
         Fragment f = getFragmentManager().findFragmentByTag(LIST_FRAGMENT_TAG);
 
-        if (clazz.equals(((Object) f).getClass())) {
+        if (f != null && clazz.equals(((Object) f).getClass())) {
             // there is no need to swap the same fragments
             return;
         }
@@ -84,7 +84,7 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
             getFragmentManager()
                     .beginTransaction()
                     .replace(R.id.list_container, fragment, LIST_FRAGMENT_TAG)
-                    .addToBackStack(null)
+//                    .addToBackStack(null)
                     .commit();
         } catch (InstantiationException e) {
             e.printStackTrace();
