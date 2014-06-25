@@ -7,13 +7,14 @@ import pl.schibsted.chat.AppCommom;
 import pl.schibsted.chat.errorhandling.ChatAppException;
 import pl.schibsted.chat.events.ClientConnectEvent;
 import pl.schibsted.chat.events.IncomingChatMessageEvent;
+import pl.schibsted.chat.model.ChatMessage;
 
 import java.util.Date;
 
 public class ChatClient implements MessageListener {
     public static final String HOST = "matcyburtest.int.vgnett.no";
     public static final int PORT = 5222;
-    public static final String SERVICE = "matcyburtest.int.vgnett.no";
+    public static final String SERVICE = "";
     private XMPPConnection _connection;
     private ChatManager _cm;
 
@@ -39,10 +40,11 @@ public class ChatClient implements MessageListener {
 
     @Override
     public void processMessage(Chat chat, Message message) {
-        IncomingChatMessageEvent event = new IncomingChatMessageEvent();
-        event.Message = message.getBody();
-        event.From = message.getFrom();
-        event.ThreadName = chat.getThreadID();
+        ChatMessage msg = new ChatMessage();
+        msg.Message = message.getBody();
+        msg.From = message.getFrom();
+        msg.ThreadName = chat.getThreadID();
+        IncomingChatMessageEvent event = new IncomingChatMessageEvent(msg);
         AppCommom.EventBus.post(event);
     }
 
@@ -60,6 +62,35 @@ public class ChatClient implements MessageListener {
                 for (int i = 0; i < 10000 && !connection.isConnected(); i += 100) {
                     Thread.sleep(100);
                 }
+                connection.addConnectionListener(new ConnectionListener() {
+                    @Override
+                    public void connectionClosed() {
+
+                    }
+
+                    @Override
+                    public void connectionClosedOnError(Exception e) {
+                        int a = 1;
+                    }
+
+                    @Override
+                    public void reconnectingIn(int i) {
+                        int a = 1;
+
+                    }
+
+                    @Override
+                    public void reconnectionSuccessful() {
+                        int a = 1;
+
+                    }
+
+                    @Override
+                    public void reconnectionFailed(Exception e) {
+                        int a = 1;
+
+                    }
+                });
                 connection.login(chatCredentials[0].Username, chatCredentials[0].Password);
                 _cm = _connection.getChatManager();
                 res = new ClientConnectEvent();
