@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">chat</string>
+
+    <!-- Auth -->
+    <string name="authenticator_account_type">pl.schibsted.chat.authenticator</string>
+    <string name="authenticator_token_type">pl.schibsted.chat.tokentype</string>
 </resources>
