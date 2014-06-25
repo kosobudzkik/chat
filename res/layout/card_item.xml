@@ -1,43 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background_box"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+
+        <pl.schibsted.chat.components.LatoTextView
+                android:id="@+id/article_title_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/background_box"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-        android:paddingBottom="10dp">
+                android:layout_margin="10dp"
+                android:text="@string/todo"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                style="@style/ChatTheme.Text.Big"/>
 
-    <pl.schibsted.chat.components.LatoTextView
-            android:id="@+id/article_title_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="@string/todo"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            style="@style/ChatTheme.Text.Big"/>
+        <ImageView
+                android:id="@+id/article_image_view"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/no_photo"
+                android:layout_below="@id/article_title_text_view"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"/>
 
-    <ImageView
-            android:id="@+id/article_image_view"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/no_avatar_M"
-            android:layout_below="@id/article_title_text_view"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"/>
-
-    <pl.schibsted.chat.components.LatoTextView
-            android:id="@+id/article_date_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="@string/article_date"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/article_image_view"
-            android:gravity="right"
-            style="@style/ChatTheme.Text.Medium"/>
-</RelativeLayout>
+        <pl.schibsted.chat.components.LatoTextView
+                android:id="@+id/article_date_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="@string/article_date"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/article_image_view"
+                android:gravity="right"
+                style="@style/ChatTheme.Text.Medium"/>
+    </RelativeLayout>
+</LinearLayout>

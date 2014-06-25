@@ -48,6 +48,8 @@
             <meta-data android:name="android.accounts.AccountAuthenticator" android:resource="@xml/authenticator"/>
         </service>
 
+        <service android:exported="false" android:name="pl.schibsted.chat.service.RetrofitSpiceService"/>
+
         <activity android:name=".activities.ArticleChatActivity"/>
     </application>
 </manifest>

@@ -1,15 +1,19 @@
 package pl.schibsted.chat.adapter;
 
 import android.content.Context;
+import android.text.style.TextAppearanceSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import pl.schibsted.chat.R;
+import pl.schibsted.chat.async.DownloadAsyncTask;
 import pl.schibsted.chat.components.LatoTextView;
 import pl.schibsted.chat.model.Article;
+import pl.schibsted.chat.utils.TextUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -17,7 +21,9 @@ import java.util.List;
  */
 public class ArticlesListAdapter extends BaseAdapter {
     private final List<Article> mArticles;
-    private Context mContext;
+    private final Context mContext;
+
+    private final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm yyyy-MM-dd");
 
     public ArticlesListAdapter(Context context, List<Article> articles) {
         mContext = context;
@@ -57,7 +63,7 @@ public class ArticlesListAdapter extends BaseAdapter {
 
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            v = inflater.inflate(R.layout.card_item, parent, true);
+            v = inflater.inflate(R.layout.card_item, parent, false);
 
             ViewHolder vhh = new ViewHolder();
             vhh.titleTextView = (LatoTextView) v.findViewById(R.id.article_title_text_view);
@@ -73,14 +79,27 @@ public class ArticlesListAdapter extends BaseAdapter {
         Article article = mArticles.get(position);
 
         vh.titleTextView.setText(article.getTitle());
-//        vh.dateTextView.setText(
-//                TextUtils.setSpanBetweenTokens(
-//                        mContextgetResources().getQuantityString(R.plurals.left_after_exercising, leftAfterExercising, leftAfterExercising),
-//                        TextUtils.DEFAULT_TOKEN,
-//                        new TextAppearanceSpan(getActivity(), R.style.VektklubbTheme_Text_Bigger)
-//                ));
+        vh.dateTextView.setText(
+                TextUtils.setSpanBetweenTokens(
+                        String.format(
+                                mContext.getString(R.string.article_date),
+                                DATE_FORMAT.format(article.getPublished() * 1000l)
+                                ),
+                        TextUtils.DEFAULT_TOKEN,
+                        new TextAppearanceSpan(mContext, R.style.ChatTheme_Text_Big_Bold)
+                ));
 
-        return null;
+        if (article.getMainImages() != null) {
+            new DownloadAsyncTask(vh.coverView).execute(article.getMainImages().getNormalUrl());
+        }
+
+        return v;
+    }
+
+    public void addItems(List<Article> articles) {
+        mArticles.addAll(articles);
+
+        notifyDataSetChanged();
     }
 
     private class ViewHolder {

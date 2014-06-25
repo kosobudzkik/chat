@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<pl.schibsted.chat.components.LatoTextView xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@id/android:empty"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:gravity="center"
-              android:text="@string/info_no_results"
-              style="@style/ChatTheme.Text.Big.Bold"
-        android:background="@color/background_box"/>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+        android:visibility="gone">
+
+    <pl.schibsted.chat.components.LatoTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/info_no_results"
+            style="@style/ChatTheme.Text.Big.Bold" android:layout_gravity="center"/>
+</LinearLayout>
