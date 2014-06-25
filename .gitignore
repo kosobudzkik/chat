@@ -31,3 +31,5 @@ proguard/
 
 # Hackday hack
 pom.xml
+
+target/*
