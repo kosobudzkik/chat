@@ -10,4 +10,8 @@ public class ChatAppException extends RuntimeException {
     public ChatAppException(Throwable inner) {
         super(inner);
     }
+
+    public ChatAppException(String message)  {
+        super(message);
+    }
 }
